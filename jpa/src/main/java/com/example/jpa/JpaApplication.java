@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
  * 使用 JPA 访问数据
  * Spring Data JPA 专注于使用 JPA 在关系数据库中存储数据
  * 它最引人注目的功能是能够在运行时从存储库界面自动创建存储库实现。
+ * 这个列子使用h2数据库，默认ddl create-drop 创建数据库并在SessionFactory关闭时删除它。
  */
 @SpringBootApplication
 public class JpaApplication {
