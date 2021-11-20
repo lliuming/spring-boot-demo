@@ -46,6 +46,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!--      一个能对数据库变更做版本控制的工具，迁移工具      -->
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>8.0.5</version>
+            </plugin>
         </plugins>
     </build>
 
