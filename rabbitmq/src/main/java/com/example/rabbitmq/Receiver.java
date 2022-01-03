@@ -23,7 +23,7 @@ public class Receiver {
      * 接收消息
      * @param message 消息字符串
      */
-    @RabbitListener(queues = QUEUE_NAME)
+//    @RabbitListener(queues = QUEUE_NAME)
     public void receiveMessage(String message) {
         System.out.println("Received <" + message + ">");
 //        countDownLatch.countDown();
@@ -33,7 +33,7 @@ public class Receiver {
      * 订单消息
      * @param message 消息对象
      */
-    @RabbitListener(queues = QUEUE_NAME, containerFactory = "simpleRabbitListenerContainerFactory")
+//    @RabbitListener(queues = QUEUE_NAME, containerFactory = "simpleRabbitListenerContainerFactory")
     public void receiveMessage(Message message, Channel channel) {
         System.out.println("Received <" + message.toString() + ">");
         countDownLatch.countDown();
@@ -61,7 +61,7 @@ public class Receiver {
         }
     }
 
-    @RabbitListener(queues = QUEUE_NAME, containerFactory = "simpleRabbitListenerContainerFactory")
+//    @RabbitListener(queues = QUEUE_NAME, containerFactory = "simpleRabbitListenerContainerFactory")
     public void receiveMessage1(Message message, Channel channel) {
         System.out.println("消费者2：Received <" + message.toString() + ">");
         try {

@@ -1,7 +1,20 @@
 version: "3"
 services:
-  rabbitmq:
-    image: rabbitmq:management
+  rabbitmq0:
+    image: rabbitmq:v1
     ports:
       - "5672:5672"
       - "15672:15672"
+    hostname: rabbitmq0
+  rabbitmq1:
+    image: rabbitmq:v1
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    hostname: rabbitmq1
+  rabbitmq2:
+    image: rabbitmq:v1
+    ports:
+      - "5674:5672"
+      - "15674:15672"
+    hostname: rabbitmq2

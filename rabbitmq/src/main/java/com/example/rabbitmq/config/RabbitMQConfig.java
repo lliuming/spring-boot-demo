@@ -35,6 +35,11 @@ public class RabbitMQConfig {
     //  队列名称
     public static final String QUEUE_NAME = "spring-boot-queue";
 
+//    集群测试队列
+    public static final String CLUSTER_QUEUE_NAME_1 = "cluster-1";
+
+    public static final String CLUSTER_QUEUE_NAME_2 = "cluster-2";
+
     //  topic交换机名称
     public static final String TOPIC_EXCHANGE_NAME = "spring-boot-topic-exchange";
 
@@ -49,7 +54,7 @@ public class RabbitMQConfig {
      * 创建一个 AMQP 队列
      * @return Queue
      */
-    @Bean
+//    @Bean
     public Queue queue() {
         Map<String, Object> options = new HashMap<>();
         //        设置死信交换机，消息超时，或者消息超出队列容量，或者消息被拒绝，而没有被退回到原队列，消息会回到死信交换机
@@ -57,6 +62,34 @@ public class RabbitMQConfig {
 //        当一个消息是死信消息的时候使用的路由键
         options.put("x-dead-letter-routing-key", "死信交换机的路由键");
         return new Queue(QUEUE_NAME, true, false, false, options);
+    }
+
+    /**
+     * 创建一个 AMQP 队列
+     * @return Queue
+     */
+    @Bean
+    public Queue cluster_queue0() {
+        Map<String, Object> options = new HashMap<>();
+        //        设置死信交换机，消息超时，或者消息超出队列容量，或者消息被拒绝，而没有被退回到原队列，消息会回到死信交换机
+        options.put("x-dead-letter-exchange", TOPIC_EXCHANGE_NAME);
+//        当一个消息是死信消息的时候使用的路由键
+        options.put("x-dead-letter-routing-key", "死信交换机的路由键");
+        return new Queue(CLUSTER_QUEUE_NAME_1, true, false, false, options);
+    }
+
+    /**
+     * 创建一个 AMQP 队列
+     * @return Queue
+     */
+    @Bean
+    public Queue cluster_queue1() {
+        Map<String, Object> options = new HashMap<>();
+        //        设置死信交换机，消息超时，或者消息超出队列容量，或者消息被拒绝，而没有被退回到原队列，消息会回到死信交换机
+        options.put("x-dead-letter-exchange", TOPIC_EXCHANGE_NAME);
+//        当一个消息是死信消息的时候使用的路由键
+        options.put("x-dead-letter-routing-key", "死信交换机的路由键");
+        return new Queue(CLUSTER_QUEUE_NAME_2, true, false, false, options);
     }
 
     /**
@@ -99,13 +132,13 @@ public class RabbitMQConfig {
      * 定义RabbitTemplate发布到交换时发生的行为
      * #全匹配
      * *word匹配
-     * @param queue 队列
+     * @param cluster_queue0 队列
      * @param topicExchange 交换机
      * @return Binding
      */
     @Bean(name = "topic")
-    public Binding binding(Queue queue, TopicExchange topicExchange) {
-        return BindingBuilder.bind(queue).to(topicExchange).with("foo.bar.#");
+    public Binding binding(Queue cluster_queue0, TopicExchange topicExchange) {
+        return BindingBuilder.bind(cluster_queue0).to(topicExchange).with("foo.bar.#");
     }
 
 //    @Bean(name = "direct")
@@ -114,8 +147,8 @@ public class RabbitMQConfig {
     }
 
     @Bean(name = "fanout")
-    public Binding binding(Queue queue, FanoutExchange fanoutExchange) {
-        return BindingBuilder.bind(queue).to(fanoutExchange);
+    public Binding binding(Queue cluster_queue1, FanoutExchange fanoutExchange) {
+        return BindingBuilder.bind(cluster_queue1).to(fanoutExchange);
     }
 
     @Bean

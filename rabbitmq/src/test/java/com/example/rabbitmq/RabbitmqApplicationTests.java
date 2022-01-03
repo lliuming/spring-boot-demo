@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-import static com.example.rabbitmq.config.RabbitMQConfig.DIRECT_EXCHANGE_NAME;
-import static com.example.rabbitmq.config.RabbitMQConfig.QUEUE_NAME;
+import static com.example.rabbitmq.config.RabbitMQConfig.*;
 
 @SpringBootTest
 class RabbitmqApplicationTests {
@@ -47,7 +46,12 @@ class RabbitmqApplicationTests {
 //        rabbitTemplate.convertAndSend(DIRECT_EXCHANGE_NAME, "foo.bar.baz", "Hello from RabbitMQ!", new CorrelationData("订单ID2"));
     }
 
-    @RabbitListener(queues = QUEUE_NAME, containerFactory = "simpleRabbitListenerContainerFactory")
+    /**
+     * 批量确认测试耗时性能
+     * @param message 消息
+     * @param channel 频道
+     */
+//    @RabbitListener(queues = QUEUE_NAME, containerFactory = "simpleRabbitListenerContainerFactory")
     public void receiveMessage1(Message message, Channel channel) {
 //        System.out.println("测试者：Received <" + message.toString() + ">");
         if (localDateTime == null) {
@@ -64,6 +68,37 @@ class RabbitmqApplicationTests {
         } catch (IOException e) {
             System.out.println("消息确认失败");
         }
+    }
+
+    /**
+     * 消息生产者
+     */
+    @Test
+    public void clusterTest0() {
+        rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_NAME, "foo.bar.baz", "Hello from RabbitMQ!", new CorrelationData("订单ID" + i));
+        rabbitTemplate.convertAndSend(FANOUT_EXCHANGE_NAME, "foo.bar.baz", "Hello from RabbitMQ!", new CorrelationData("订单ID" + i));
+    }
+
+    /**
+     * 集群接收消息测试
+     * @param message 消息
+     * @param channel 频道
+     */
+    @RabbitListener(queues = CLUSTER_QUEUE_NAME_1, containerFactory = "simpleRabbitListenerContainerFactory")
+    public void clusterTest1(Message message, Channel channel) {
+//        消费者
+        System.out.println(message);
+    }
+
+    /**
+     * 集群接收消息测试
+     * @param message 消息
+     * @param channel 频道
+     */
+    @RabbitListener(queues = CLUSTER_QUEUE_NAME_2, containerFactory = "simpleRabbitListenerContainerFactory")
+    public void clusterTest2(Message message, Channel channel) {
+//        消费者
+        System.out.println(message);
     }
 
 }
